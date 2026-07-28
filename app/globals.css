@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #070a12;
+  --color-foreground: #e7eaf3;
+  --color-card: #0e1320;
+  --color-card-elevated: #131a2b;
+  --color-border: #1d2436;
+  --color-input: #0a0e18;
+  --color-muted: #8b93a7;
+  --color-primary: #5b8cff;
+  --color-primary-foreground: #ffffff;
+  --color-primary-dim: #24345f;
+  --color-positive: #3ecf8e;
+  --color-negative: #ff5c66;
+  --color-warning: #ffb84d;
+
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+
+  --radius: 0.875rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+::selection {
+  background-color: rgba(91, 140, 255, 0.3);
+}
+
+/* Subtle grid backdrop */
+.grid-backdrop {
+  background-image:
+    linear-gradient(to right, rgba(91, 140, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(91, 140, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glow-primary {
+  box-shadow: 0 0 0 1px rgba(91, 140, 255, 0.15), 0 12px 40px -12px rgba(91, 140, 255, 0.35);
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(62, 207, 142, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(62, 207, 142, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(62, 207, 142, 0); }
+}
+.pulse-dot { animation: pulse-ring 2s infinite; }
+
+/* thin scrollbar for log */
+.thin-scroll::-webkit-scrollbar { width: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 999px; }
