@@ -147,6 +147,23 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     }
   }, [address])
 
+  const addNetwork = useCallback(async () => {
+    const eth = getEthereum()
+    if (!eth) return
+    await eth.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: DOMA.chainIdHex,
+          chainName: DOMA.chainName,
+          nativeCurrency: DOMA.nativeCurrency,
+          rpcUrls: [DOMA.rpcUrl],
+          blockExplorerUrls: [DOMA.explorer],
+        },
+      ],
+    })
+  }, [])
+
   const switchNetwork = useCallback(async () => {
     const eth = getEthereum()
     if (!eth) return
@@ -156,24 +173,30 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         params: [{ chainId: DOMA.chainIdHex }],
       })
     } catch (err: any) {
-      if (err.code === 4902) {
-        await eth.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: DOMA.chainIdHex,
-              chainName: DOMA.chainName,
-              nativeCurrency: DOMA.nativeCurrency,
-              rpcUrls: [DOMA.rpcUrl],
-              blockExplorerUrls: [DOMA.explorer],
-            },
-          ],
-        })
+      // Different wallets signal "chain not added" differently: some use code
+      // 4902, some nest it in err.data.originalError.code, and some only put
+      // "Unrecognized chain ID" in the message. Treat all of these as
+      // "needs to be added", add the chain, then retry the switch.
+      const code = err?.code ?? err?.data?.originalError?.code
+      const message = String(err?.message ?? err?.data?.originalError?.message ?? "")
+      const chainMissing =
+        code === 4902 || /unrecognized chain id|add.*chain/i.test(message)
+
+      if (chainMissing) {
+        await addNetwork()
+        try {
+          await eth.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: DOMA.chainIdHex }],
+          })
+        } catch {
+          /* wallet auto-selects the freshly added chain in most cases */
+        }
       } else {
         throw err
       }
     }
-  }, [])
+  }, [addNetwork])
 
   const connect = useCallback(async () => {
     const eth = getEthereum()
