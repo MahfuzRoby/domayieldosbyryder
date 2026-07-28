@@ -13,6 +13,12 @@ frontend/.next/
 frontend/dist/
 frontend/build/
 
+# Next.js / Node
+node_modules/
+.next/
+next-env.d.ts
+.vercel
+
 # misc
 *.log
 .DS_Store
