@@ -1,0 +1,18 @@
+# Foundry
+out/
+cache/
+broadcast/*/31337/
+
+# env files - IMPORTANT
+.env
+.env.local
+
+# frontend
+frontend/node_modules/
+frontend/.next/
+frontend/dist/
+frontend/build/
+
+# misc
+*.log
+.DS_Store
