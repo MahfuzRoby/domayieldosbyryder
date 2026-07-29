@@ -6,8 +6,9 @@ import { useWallet } from "@/components/wallet-provider"
 import { useTx } from "@/components/use-tx"
 import { Card, CardHeader, Stat, Button, Field } from "@/components/ui-bits"
 import { fmtUsdc, fmtUsd18, errMsg } from "@/lib/format"
+import { useOwnedDomains } from "@/components/use-owned-domains"
 import { ADDRESSES } from "@/lib/contracts"
-import { Landmark, Search, PackagePlus, HandCoins, Undo2, PackageMinus, Zap } from "lucide-react"
+import { Landmark, Search, PackagePlus, HandCoins, Undo2, PackageMinus, Zap, ScanLine } from "lucide-react"
 
 type Position = {
   borrower: string
@@ -23,6 +24,7 @@ const MAX_UINT = (1n << 256n) - 1n
 export function BorrowCard() {
   const { contracts, address, pushLog } = useWallet()
   const { run, pending } = useTx()
+  const { domains: ownedDomains, scanning, scan } = useOwnedDomains()
 
   const [tokenId, setTokenId] = useState("")
   const [borrowAmt, setBorrowAmt] = useState("")
@@ -150,6 +152,32 @@ export function BorrowCard() {
         title="Borrow — Domain Collateral"
         subtitle="Lock a tokenized Doma domain (Ownership Token ID) as collateral, then borrow USDC.e against its appraised value."
       />
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <Button
+          variant="secondary"
+          onClick={scan}
+          loading={scanning}
+          disabled={disabled}
+        >
+          <ScanLine className="size-4" aria-hidden />
+          Scan Wallet for Domains
+        </Button>
+        {ownedDomains.length > 0 ? (
+          <select
+            className="min-w-0 flex-1 rounded-lg border border-border bg-input px-3 py-2.5 font-mono text-sm text-foreground outline-none"
+            value={tokenId}
+            onChange={(e) => setTokenId(e.target.value)}
+          >
+            <option value="">Select a domain ({ownedDomains.length} found)</option>
+            {ownedDomains.map((d) => (
+              <option key={d.tokenId} value={d.tokenId}>
+                Token #{d.tokenId}
+                {d.expiry > 0n ? ` — expires ${new Date(Number(d.expiry) * 1000).toLocaleDateString()}` : ""}
+              </option>
+            ))}
+          </select>
+        ) : null}
+      </div>
 
       <div className="mb-4 flex flex-col gap-2 sm:flex-row">
         <Field

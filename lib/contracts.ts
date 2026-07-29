@@ -58,4 +58,7 @@ export const NFT_ABI = [
   "function approve(address,uint256)",
   "function getApproved(uint256) view returns (address)",
   "function expirationOf(uint256) view returns (uint256)",
+  "function balanceOf(address) view returns (uint256)",
+  "function tokenOfOwnerByIndex(address,uint256) view returns (uint256)",
+  "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
 ] as const
