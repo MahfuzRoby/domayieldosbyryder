@@ -11,9 +11,9 @@ export const DOMA = {
 } as const
 
 export const ADDRESSES = {
-  usdc: "0x2d975a96555575aa31930d29e261a1c3d6e03b83",
-  vault: "0xdef1c7053f05124d2c7cf8570532d1f90589dfbf", // DUSDCVault (ERC-4626 pool)
-  domainVault: "0xcf2d7a5d2af0f0ef654eb9cff750330925d38bbd", // DomainVault (lending)
+  usdc: "0x283BF87BF58339633c231C546aC665946F279E0A",
+  vault: "0x66B4739Ccf3Acf66eAe286940878DEE223Cb26fa", // DUSDCVault (ERC-4626 pool)
+  domainVault: "0xCDBe72Cd064ACFD2ebA98Cc49479dac3cbcb0FC4", // DomainVault (lending)
   domainNFT: "0xd000000000009E6bEa0bA0c5D964AE98d59ED318", // Doma Ownership Token
 } as const
 
