@@ -38,8 +38,9 @@ export function BorrowCard() {
     if (!contracts || !tokenId) return
     setLoading(true)
     try {
-      const [p, collat, hf] = await Promise.all([
+      const [p, debt, collat, hf] = await Promise.all([
         contracts.domainVault.positions(tokenId),
+        contracts.domainVault.debtOf(tokenId),
         contracts.domainVault.collateralValue(tokenId),
         contracts.domainVault.healthFactorBps(tokenId),
       ])
@@ -51,8 +52,8 @@ export function BorrowCard() {
       }
       setPos({
         borrower: p.borrower ?? p[0],
-        debt: p.debt ?? p[1],
-        active: p.active ?? p[2],
+        debt,
+        active: p.active ?? p[4],
         collateral: collat,
         healthBps: hf,
         expiry,
